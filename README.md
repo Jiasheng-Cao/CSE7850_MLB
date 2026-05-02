@@ -1,6 +1,6 @@
 TAILGR: Tail-Aware Local Graph Refinement for Protein Function Prediction
 
-====================
+
 Data Preparation
 ====================
 
@@ -13,7 +13,7 @@ project_root/
     data/
         ...
 
-====================
+
 EC Dataset Construction
 ====================
 
@@ -27,7 +27,7 @@ This will generate:
 - EC dataset
 - EC directed spectral embedding
 
-====================
+
 GO Embedding Construction
 ====================
 
@@ -40,7 +40,7 @@ Modify the parameters in the script to process different GO sub-ontologies:
 - BP (Biological Process)
 - CC (Cellular Component)
 
-====================
+
 Model Training
 ====================
 
@@ -54,14 +54,14 @@ TAILGR model:
 Run:
 Model_TAILGR.ipynb
 
-====================
+
 Result Analysis
 ====================
 
 Run:
 predict_result_analysis.ipynb
 
-====================
+
 Notes
 ====================
 
