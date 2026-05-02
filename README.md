@@ -14,7 +14,7 @@ project_root/
         ...
 
 
-EC Dataset Construction
+## EC Dataset Construction
 ====================
 
 Run the following scripts in order:
@@ -30,7 +30,7 @@ This will generate:
 - EC directed spectral embedding
 
 
-GO Embedding Construction
+## GO Embedding Construction
 ====================
 
 Run:
@@ -43,7 +43,7 @@ Modify the parameters in the script to process different GO sub-ontologies:
 - CC (Cellular Component)
 
 
-Model Training
+## Model Training
 ====================
 
 Baseline models:
@@ -57,14 +57,14 @@ Run:
 Model_TAILGR.ipynb
 
 
-Result Analysis
+## Result Analysis
 ====================
 
 Run:
 predict_result_analysis.ipynb
 
 
-Notes
+## Notes
 ====================
 
 - Make sure all data files are placed under the "data" folder before running any scripts.
