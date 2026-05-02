@@ -1,7 +1,7 @@
-## TAILGR: Tail-Aware Local Graph Refinement for Protein Function Prediction
+# TAILGR: Tail-Aware Local Graph Refinement for Protein Function Prediction
 
 
-Data Preparation
+## Data Preparation
 ====================
 
 Download the dataset from:
