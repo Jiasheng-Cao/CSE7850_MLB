@@ -45,25 +45,17 @@ def build_ec_directed_spectral_embedding(
     dim=64,
     alpha=0.95,
 ):
-    """
-    ✔ 完全复用 GO pipeline
-    ✔ EC hierarchy → parent → child
-    ✔ Chung Directed Laplacian
-    """
 
-    print(f"[INFO] Loading EC dataset from: {ec_pt_path}")
+    print(f"Loading EC dataset from: {ec_pt_path}")
     data = torch.load(ec_pt_path)
 
     ec_terms = list(data["ec2idx"].keys())
     term2idx = data["ec2idx"]
 
     K = len(ec_terms)
-    print(f"[INFO] Number of EC terms: {K}")
+    print(f"Number of EC terms: {K}")
 
-    # --------------------------------------------------
-    # 1) 构建有向邻接矩阵 parent -> child
-    # --------------------------------------------------
-    print("[INFO] Building directed adjacency matrix (EC hierarchy)")
+    print("Building directed adjacency matrix (EC hierarchy)")
 
     rows, cols = [], []
 
@@ -72,24 +64,20 @@ def build_ec_directed_spectral_embedding(
 
         parts = child.split(".")
 
-        # build ancestors（完全等价 get_ancestors）
         for l in range(1, len(parts)):
             parent = ".".join(parts[:l])
 
             if parent in term2idx:
                 j = term2idx[parent]
 
-                rows.append(j)  # parent
-                cols.append(i)  # child
+                rows.append(j)
+                cols.append(i)
 
     data_vals = np.ones(len(rows), dtype=np.float32)
     A = sp.coo_matrix((data_vals, (rows, cols)), shape=(K, K)).tocsr()
 
-    print(f"[INFO] Directed edges: {A.nnz}")
+    print(f"Directed edges: {A.nnz}")
 
-    # --------------------------------------------------
-    # 2) Row-normalized random walk matrix
-    # --------------------------------------------------
     out_deg = np.array(A.sum(axis=1)).ravel().astype(np.float64)
     out_deg_safe = out_deg.copy()
     out_deg_safe[out_deg_safe == 0] = 1.0
@@ -97,10 +85,7 @@ def build_ec_directed_spectral_embedding(
     D_out_inv = sp.diags(1.0 / out_deg_safe)
     P0 = (D_out_inv @ A).tocsr()
 
-    # --------------------------------------------------
-    # 3) Stationary distribution π
-    # --------------------------------------------------
-    print(f"[INFO] Computing stationary distribution (alpha={alpha})")
+    print(f"Computing stationary distribution (alpha={alpha})")
     pi = power_iteration_stationary(P0, alpha=alpha)
 
     sqrt_pi = np.sqrt(pi)
@@ -111,10 +96,7 @@ def build_ec_directed_spectral_embedding(
 
     P = (alpha * P0).tocsr()
 
-    # --------------------------------------------------
-    # 4) Chung Directed Laplacian
-    # --------------------------------------------------
-    print("[INFO] Building Chung directed Laplacian")
+    print("Building Chung directed Laplacian")
 
     M1 = (Pi_sqrt @ P @ Pi_inv_sqrt).tocsr()
     M2 = (Pi_inv_sqrt @ P.T @ Pi_sqrt).tocsr()
@@ -122,24 +104,18 @@ def build_ec_directed_spectral_embedding(
     S = (M1 + M2) * 0.5
     L = sp.eye(K, format="csr") - S
 
-    # --------------------------------------------------
-    # 5) Spectral embedding
-    # --------------------------------------------------
-    print(f"[INFO] Computing spectral embedding (dim={dim})")
+    print(f"Computing spectral embedding (dim={dim})")
 
     eigvals, eigvecs = eigsh(L, k=dim + 1, which="SM")
     ec_emb = eigvecs[:, 1 : dim + 1]
 
-    print(f"[INFO] Directed spectral embedding shape: {ec_emb.shape}")
+    print(f"Directed spectral embedding shape: {ec_emb.shape}")
 
-    # --------------------------------------------------
-    # 6) Save
-    # --------------------------------------------------
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     np.save(out_path, ec_emb)
 
-    print(f"[INFO] Saved EC spectral embedding to: {out_path}")
+    print(f"Saved EC spectral embedding to: {out_path}")
 
 
 def main():

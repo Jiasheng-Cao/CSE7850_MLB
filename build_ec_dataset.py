@@ -11,17 +11,15 @@ acc2ec = pickle.load(open(ACC2EC_PKL, "rb"))
 multi_ec_labels = []
 valid_indices = []
 
-# ===== 展开 EC 成多层 =====
 def expand_ec(ec):
     parts = ec.split(".")
     levels = []
     for i in range(1, 5):
         sub = ".".join(parts[:i])
-        if "-" not in sub:   # 过滤不完整 EC
+        if "-" not in sub:
             levels.append(sub)
     return levels
 
-# ===== 构建 multi-label =====
 for i, acc in enumerate(df["accessions"]):
     acc = acc[0] if isinstance(acc, list) else acc
 
@@ -46,7 +44,6 @@ for i, acc in enumerate(df["accessions"]):
 
 print("Matched EC proteins:", len(valid_indices))
 
-# ===== 构建 vocab（所有 level）=====
 all_ec = set()
 for labels in multi_ec_labels:
     all_ec.update(labels)
@@ -56,20 +53,17 @@ ec2idx = {ec: i for i, ec in enumerate(unique_ec)}
 
 print("Number of EC classes:", len(unique_ec))
 
-# ===== 构建 multi-hot 标签 =====
 Y = torch.zeros(len(multi_ec_labels), len(unique_ec))
 
 for i, labels in enumerate(multi_ec_labels):
     for ec in labels:
         Y[i, ec2idx[ec]] = 1
 
-# ===== 构建输入 =====
 X = torch.stack([df["esm2"][i] for i in valid_indices])
 
 print("X shape:", X.shape)
 print("Y shape:", Y.shape)
 
-# ===== 保存 =====
 torch.save({
     "X": X,
     "Y": Y,
