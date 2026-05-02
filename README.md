@@ -20,7 +20,9 @@ EC Dataset Construction
 Run the following scripts in order:
 
 python build_ec_mapping.py
+
 python build_ec_dataset.py
+
 python build_ec_directed_spectral_embedding.py
 
 This will generate:
@@ -46,7 +48,7 @@ Model Training
 
 Baseline models:
 
-Run:
+Run: 
 baseline_evaluation_withEC.ipynb
 
 TAILGR model:
