@@ -2,7 +2,6 @@
 
 
 ## Data Preparation
-====================
 
 Download the dataset from:
 https://drive.google.com/drive/folders/1hnx75yGfrSdFL5ERxTfEzUVJ6F724ZJp?usp=drive_link
@@ -15,7 +14,6 @@ project_root/
 
 
 ## EC Dataset Construction
-====================
 
 Run the following scripts in order:
 
@@ -31,7 +29,6 @@ This will generate:
 
 
 ## GO Embedding Construction
-====================
 
 Run:
 
@@ -44,7 +41,6 @@ Modify the parameters in the script to process different GO sub-ontologies:
 
 
 ## Model Training
-====================
 
 Baseline models:
 
@@ -58,14 +54,12 @@ Model_TAILGR.ipynb
 
 
 ## Result Analysis
-====================
 
 Run:
 predict_result_analysis.ipynb
 
 
 ## Notes
-====================
 
 - Make sure all data files are placed under the "data" folder before running any scripts.
 - GO embeddings should be generated separately for MF, BP, and CC.
